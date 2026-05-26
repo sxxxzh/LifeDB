@@ -10,6 +10,7 @@ const cosmicRoutes = require('./routes/cosmic');
 const uploadRoutes = require('./routes/upload');
 const universeRoutes = require('./routes/universe');
 const authRoutes = require('./routes/auth');
+const agentRoutes = require('./routes/agent');
 
 const app = express();
 const PORT = process.env.PORT || 3333;
@@ -66,6 +67,7 @@ let testsPassed = true;
   app.use('/api/cosmic', cosmicRoutes);
   app.use('/api/upload', uploadRoutes);
   app.use('/api/universe', universeRoutes);
+  app.use('/api/agent', agentRoutes);
 
   // 健康检查
   app.get('/health', (req, res) => {
@@ -120,7 +122,7 @@ let testsPassed = true;
   cron.schedule('0 0 * * *', async () => {
     console.log('🔄 宇宙维护任务开始...');
     try {
-      const { SiliconFlowAIService } = require('./lib/ai-service');
+      const { DeepSeekAIService } = require('./lib/ai-service');
       const now = new Date();
       if (now.getMonth() === 0 && now.getDate() === 1) {
         const year = now.getFullYear() - 1;
@@ -133,7 +135,7 @@ let testsPassed = true;
           .lte('created_at', end)
           .order('created_at', { ascending: true });
         const joined = (moments || []).map(m => m.ai_summary || m.text || '').filter(Boolean).join('\n');
-        const ai = new SiliconFlowAIService();
+        const ai = new DeepSeekAIService();
         const summary = joined ? await ai.generateSummary(joined) : '';
       await supabase
         .from('life_summary')
@@ -149,8 +151,8 @@ let testsPassed = true;
   cron.schedule('0 0 * * 1', async () => {
     console.log('🗓️  周摘要生成任务开始...');
     try {
-      const { SiliconFlowAIService } = require('./lib/ai-service');
-      const ai = new SiliconFlowAIService();
+      const { DeepSeekAIService } = require('./lib/ai-service');
+      const ai = new DeepSeekAIService();
       const now = new Date();
       const t = new Date(now);
       t.setDate(t.getDate() - 7); // 上一周
@@ -185,8 +187,8 @@ let testsPassed = true;
   cron.schedule('0 0 1 * *', async () => {
     console.log('🗓️  月摘要生成任务开始...');
     try {
-      const { SiliconFlowAIService } = require('./lib/ai-service');
-      const ai = new SiliconFlowAIService();
+      const { DeepSeekAIService } = require('./lib/ai-service');
+      const ai = new DeepSeekAIService();
       const now = new Date();
       const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const y = prevMonth.getFullYear();
@@ -224,8 +226,8 @@ async function checkAndRunImmediateSummaries() {
     const now = new Date();
     const day = now.getDay();
     if (day === 1) {
-      const { SiliconFlowAIService } = require('./lib/ai-service');
-      const ai = new SiliconFlowAIService();
+      const { DeepSeekAIService } = require('./lib/ai-service');
+      const ai = new DeepSeekAIService();
       const t = new Date(now);
       t.setDate(t.getDate() - 7);
       const d = new Date(Date.UTC(t.getFullYear(), t.getMonth(), t.getDate()));
@@ -262,8 +264,8 @@ async function checkAndRunImmediateSummaries() {
       }
     }
     if (now.getDate() === 1) {
-      const { SiliconFlowAIService } = require('./lib/ai-service');
-      const ai = new SiliconFlowAIService();
+      const { DeepSeekAIService } = require('./lib/ai-service');
+      const ai = new DeepSeekAIService();
       const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const y = prevMonth.getFullYear();
       const m = prevMonth.getMonth() + 1;

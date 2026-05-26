@@ -1,7 +1,7 @@
 const express = require('express');
 const { CosmicCalculator, CosmicDatabase } = require('../lib/cosmic');
 const { authenticateToken } = require('../lib/auth');
-const { SiliconFlowAIService } = require('../lib/ai-service');
+const { DeepSeekAIService } = require('../lib/ai-service');
 
 const router = express.Router();
 
@@ -408,7 +408,7 @@ router.post('/summaries/weekly', authenticateToken, async (req, res) => {
       .order('created_at', { ascending: true });
     if (error) throw error;
     const joined = (moments || []).map(m => m.ai_summary || m.text || '').filter(Boolean).join('\n');
-    const ai = new SiliconFlowAIService();
+    const ai = new DeepSeekAIService();
     const summary = joined ? await ai.generateSummaryForPeriod(joined) : '';
     const upsert = await req.supabase
       .from('weekly_summary')
@@ -445,7 +445,7 @@ router.post('/summaries/monthly', authenticateToken, async (req, res) => {
       .order('created_at', { ascending: true });
     if (error) throw error;
     const joined = (moments || []).map(mo => mo.ai_summary || mo.text || '').filter(Boolean).join('\n');
-    const ai = new SiliconFlowAIService();
+    const ai = new DeepSeekAIService();
     const summary = joined ? await ai.generateSummaryForPeriod(joined) : '';
     const upsert = await req.supabase
       .from('monthly_summary')
@@ -472,7 +472,7 @@ router.post('/summaries/life-annual', authenticateToken, async (req, res) => {
       .order('created_at', { ascending: true });
     if (error) throw error;
     const joined = (moments || []).map(m => m.ai_summary || m.text || '').filter(Boolean).join('\n');
-    const ai = new SiliconFlowAIService();
+    const ai = new DeepSeekAIService();
     const summary = joined ? await ai.generateSummaryForPeriod(joined) : '';
     await req.supabase
       .from('life_summary')

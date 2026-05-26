@@ -2,7 +2,7 @@ const express = require('express');
 const { CosmicCalculator, CosmicDatabase } = require('../lib/cosmic');
 const { reassignNodeDistance } = require('../lib/node_placement');
 const { authenticateToken } = require('../lib/auth');
-const { SiliconFlowAIService } = require('../lib/ai-service');
+const { DeepSeekAIService } = require('../lib/ai-service');
 
 const router = express.Router();
 
@@ -188,7 +188,7 @@ router.post('/nodes', authenticateToken, async (req, res) => {
       });
     }
     
-    const aiService = new SiliconFlowAIService();
+    const aiService = new DeepSeekAIService();
     let aiData = {};
     let galaxyDecision = null; // 存储星系决策结果
     

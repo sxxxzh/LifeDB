@@ -1,7 +1,7 @@
 const express = require('express');
 const crypto = require('crypto');
 const { authenticateToken } = require('../lib/auth');
-const { SiliconFlowAIService } = require('../lib/ai-service');
+const { DeepSeekAIService } = require('../lib/ai-service');
 
 const router = express.Router();
 
@@ -69,7 +69,7 @@ router.post('/moment', authenticateToken, async (req, res) => {
         }
       }
       
-        const aiService = new SiliconFlowAIService();
+        const aiService = new DeepSeekAIService();
         let aiData = {};
         let galaxyDecision = null;
         const textContent = text ? text.trim() : '';
